@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lights Out Game</title>
+<style>
+  body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+  .board { display: grid; grid-template-columns: repeat(5, 50px); grid-gap: 5px; }
+  .cell { width: 50px; height: 50px; background-color: #000; display: flex; justify-content: center; align-items: center; cursor: pointer; color: white; font-size: 20px; }
+  .cell.on { background-color: #ff0; }
+</style>
+</head>
+<body>
+<div>
+  <input type="number" id="numLights" placeholder="Number of lights ON" min="1" max="25">
+  <button onclick="generateBoard()">Generate Board</button>
+  <div class="board"></div>
+</div>
+
+<script>
+  const boardSize = 5;
+  let board = [];
+
+  function generateBoard() {
+    const numLights = parseInt(document.getElementById('numLights').value);
+    board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
+    let count = 0;
+
+    while (count < numLights) {
+      let i = Math.floor(Math.random() * boardSize);
+      let j = Math.floor(Math.random() * boardSize);
+      if (board[i][j] === 0) {
+        board[i][j] = 1;
+        count++;
+      }
+    }
+    renderBoard();
+  }
+
+  function toggleLight(i, j) {
+    const toggle = (x, y) => {
+      if (x >= 0 && x < boardSize && y >= 0 && y < boardSize) {
+        board[x][y] = 1 - board[x][y];
+      }
+    };
+
+    toggle(i, j); // Toggle the clicked light
+    toggle(i-1, j); // Toggle above
+    toggle(i+1, j); // Toggle below
+    toggle(i, j-1); // Toggle left
+    toggle(i, j+1); // Toggle right
+    renderBoard();
+  }
+
+  function renderBoard() {
+    const boardDiv = document.querySelector('.board');
+    boardDiv.innerHTML = ''; // Clear previous board
+
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
+        const cell = document.createElement('div');
+        cell.className = 'cell' + (board[i][j] === 1 ? ' on' : '');
+        cell.onclick = () => toggleLight(i, j);
+        boardDiv.appendChild(cell);
+      }
+    }
+  }
+</script>
+</body>
+</html>
