@@ -6,24 +6,29 @@
 <title>Lights Out Game</title>
 <style>
   body { font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-  .board { display: grid; grid-template-columns: repeat(5, 50px); grid-gap: 5px; }
+  .board { display: grid; grid-gap: 5px; }
   .cell { width: 50px; height: 50px; background-color: #000; display: flex; justify-content: center; align-items: center; cursor: pointer; color: white; font-size: 20px; }
   .cell.on { background-color: #ff0; }
 </style>
 </head>
 <body>
 <div>
-  <input type="number" id="numLights" placeholder="Number of lights ON" min="1" max="25">
+  <input type="number" id="boardSize" placeholder="Board Size" value="3" min="3" max="10">
+  <input type="number" id="numLights" placeholder="Number of lights ON" min="1" max="9">
   <button onclick="generateBoard()">Generate Board</button>
   <div class="board"></div>
 </div>
 
 <script>
-  const boardSize = 5;
   let board = [];
+  let boardSize = 3; // Default size
 
   function generateBoard() {
+    boardSize = parseInt(document.getElementById('boardSize').value);
     const numLights = parseInt(document.getElementById('numLights').value);
+    const maxLights = boardSize * boardSize;
+    document.getElementById('numLights').max = maxLights; // Update max lights based on board size
+
     board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
     let count = 0;
 
@@ -56,6 +61,7 @@
   function renderBoard() {
     const boardDiv = document.querySelector('.board');
     boardDiv.innerHTML = ''; // Clear previous board
+    boardDiv.style.gridTemplateColumns = `repeat(${boardSize}, 50px)`; // Set grid columns based on board size
 
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
@@ -69,3 +75,4 @@
 </script>
 </body>
 </html>
+
